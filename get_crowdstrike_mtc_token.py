@@ -63,7 +63,7 @@ def get_auth_token(client_id, client_secret, base_url):
 
 # Get the MTC token
 
-def get_mtc_token(device_id, auth_token):
+def get_mtc_token(device_id, auth_token, base_url):
     """ 
     Get the MTC token for a given device ID from the Crowdstrike API
     """
@@ -86,7 +86,23 @@ def get_mtc_token(device_id, auth_token):
         print(f"Response: {response.text}")
         exit(1)
 
-    print("MTC token generated successfully")
-    print(f"Response: {response.json()}")
-    return response.json()['token']
+    response_data = response.json()
 
+    # Extract the uninstall token from the resources array
+    if response_data.get('resources') and len(response_data['resources']) > 0:
+        uninstall_token = response_data['resources'][0].get('uninstall_token')
+        if uninstall_token:
+            print("MTC Token generated successfully")
+            return uninstall_token
+        else:
+            print("Error: No uninstall token found in response")
+            print(f"Response: {response_data}")
+            exit(1)
+
+# Test authentication
+auth_token = get_auth_token(client_id, client_secret, base_url)
+print(f"✓ BearerToken received: {auth_token[:20]}...")  # Print first 20 chars so we don't expose the full token
+
+# Get the MTC token
+mtc_token = get_mtc_token(device_id, auth_token, base_url)
+print(f"✓ MTC token received: {mtc_token[:20]}...")  # Print first 20 chars so we don't expose the full token
