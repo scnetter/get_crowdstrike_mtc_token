@@ -31,3 +31,33 @@ if len(sys.argv) < 2:
 
 device_id = sys.argv[1]
 print(f"Device ID: {device_id}")
+
+# Get the initial Oauth2 token
+def get_auth_token(client_id, client_secret, base_url):
+    """
+    Autneticate with Crowdstrike API and return the bearer token
+    """
+    auth_url = f"{base_url}/oauth2/token"
+
+    payload = {
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'grant_type': 'client_credentials',
+    }
+
+    response = requests.post(auth_url, data=payload)
+
+    if response.status_code != 200:
+        print(f"Error: Authentication failed with status code: {response.status_code}")
+        print(f"Response: {response.text}")
+        exit(1)
+
+    token = response.json()['access_token']
+
+    if not token:
+        print("Error: No token returned in response")
+        exit(1)
+    
+    print(f"Authentication successful.")
+    return token
+
