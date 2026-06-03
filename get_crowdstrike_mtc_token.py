@@ -5,6 +5,8 @@ import requests
 
 load_dotenv()
 
+## TODO: Add usage for Mac - remainder of script will work the same.
+
 # Load API credentials from environment variables
 client_id = os.getenv('CROWDSTRIKE_CLIENT_ID')
 client_secret = os.getenv('CROWDSTRIKE_CLIENT_SECRET')
@@ -105,4 +107,4 @@ print(f"✓ BearerToken received: {auth_token[:20]}...")  # Print first 20 chars
 
 # Get the MTC token
 mtc_token = get_mtc_token(device_id, auth_token, base_url)
-print(f"✓ MTC token received: {mtc_token[:20]}...")  # Print first 20 chars so we don't expose the full token
+print(f"✓ MTC token received: {mtc_token}") 
