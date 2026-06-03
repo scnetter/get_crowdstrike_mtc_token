@@ -61,5 +61,32 @@ def get_auth_token(client_id, client_secret, base_url):
     print(f"Authentication successful.")
     return token
 
-auth_token = get_auth_token(client_id, client_secret, base_url)
-print(f"Authentication Token received successfully: {auth_token[:20]}")
+# Get the MTC token
+
+def get_mtc_token(device_id, auth_token):
+    """ 
+    Get the MTC token for a given device ID from the Crowdstrike API
+    """
+    token_url = f"{base_url}/policy/combined/reveal-uninstall-token/v1"
+
+    headers = {
+        'Authorization': f'Bearer {auth_token}',
+        'Content-Type': 'application/json',
+    }
+
+    payload = {
+        'audit_message': f"Generating MTC token for device {device_id}",
+        'device_id': device_id,
+    }
+
+    response = requests.post(token_url, headers=headers, json=payload)
+
+    if response.status_code not in [200, 201]:
+        print(f"Error: Token request failed with status code: {response.status_code}")
+        print(f"Response: {response.text}")
+        exit(1)
+
+    print("MTC token generated successfully")
+    print(f"Response: {response.json()}")
+    return response.json()['token']
+
