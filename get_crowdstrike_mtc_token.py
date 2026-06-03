@@ -47,7 +47,7 @@ def get_auth_token(client_id, client_secret, base_url):
 
     response = requests.post(auth_url, data=payload)
 
-    if response.status_code != 200:
+    if response.status_code not in [200, 201]:
         print(f"Error: Authentication failed with status code: {response.status_code}")
         print(f"Response: {response.text}")
         exit(1)
@@ -61,3 +61,5 @@ def get_auth_token(client_id, client_secret, base_url):
     print(f"Authentication successful.")
     return token
 
+auth_token = get_auth_token(client_id, client_secret, base_url)
+print(f"Authentication Token received successfully: {auth_token[:20]}")
