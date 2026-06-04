@@ -26,9 +26,14 @@ print(" All credentials loaded successfully")
 if len(sys.argv) < 2:
     print("Error: Device ID is required")
     print("\nUsage: python get_crowdstrike_mtc_token.py <device_id>")
-    print("\nTo get the device ID, on the target host run:")
+    print("\n##To get the device ID, on the target host run one of the commands below based on your operating system.##")
+    print("Windows:")
     print(" reg query HKLM\\System\\CurrentControlSet\\services\\CSAgent\\Sim\\ /f AG")
-    print("\nThe device id is the value returned from the registry query")
+    print("MacOS:")
+    print(" sudo /Applications/Falcon.app/Contents/Resources/falconctl stats | grep agentID")
+    print("Linux:")
+    print(" sudo /opt/CrowdStrike/falconctl -g --aid")
+    print("\nThe device id is the value returned. It will be listed as 'aid', agentID or AG depending on the system.")
     exit(1)
 
 device_id = sys.argv[1]
